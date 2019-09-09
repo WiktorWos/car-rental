@@ -10,14 +10,23 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "car_name")
     private String carName;
+
     @Column(name = "car_mileage")
     private int carMileage;
+
     @Column(name = "car_production")
     private Date carProduction;
+
     @Column(name = "is_active")
     private boolean isActive;
+
+    @OneToOne(mappedBy = "car",
+              cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+              fetch = FetchType.LAZY)
+    private Transaction transaction;
 
     public Car(String carName, int carMileage, Date carProduction, boolean isActive) {
         this.carName = carName;
