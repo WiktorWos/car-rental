@@ -1,7 +1,9 @@
 package com.springboottest.carrental.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
@@ -12,7 +14,8 @@ public class Transaction {
     private Long id;
 
     @Column(name = "start_date")
-    private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
 
     @Column(name = "start_mileage")
     private int startMileage;
@@ -25,7 +28,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Date startDate, int startMileage) {
+    public Transaction(LocalDate startDate, int startMileage) {
         this.startDate = startDate;
         this.startMileage = startMileage;
     }
@@ -38,11 +41,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

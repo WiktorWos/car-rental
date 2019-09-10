@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car form</title>
+</head>
+<body>
+    <form action="#" th:action="@{/cars/save}" th:object="${car}" method="post">
+        <input type="text" th:field = "*{carName}">
+        <input type="text" th:field = "*{carMileage}">
+        <input type="date" th:field = "*{carProduction}">
+        <label><input type="checkbox" value="true" th:field = "*{active}">Active</label>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

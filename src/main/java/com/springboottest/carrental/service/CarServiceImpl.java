@@ -21,4 +21,9 @@ public class CarServiceImpl implements CarService{
     public List<Car> findAll() {
         return carRepository.findAll();
     }
+
+    @Override
+    public void save(Car car) {
+        carRepository.save(car);
+    }
 }

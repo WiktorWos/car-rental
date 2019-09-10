@@ -1,7 +1,11 @@
 package com.springboottest.carrental.entity;
 
+
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "cars")
@@ -18,21 +22,22 @@ public class Car {
     private int carMileage;
 
     @Column(name = "car_production")
-    private Date carProduction;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate carProduction;
 
     @Column(name = "is_active")
-    private boolean isActive;
+    private boolean active;
 
     @OneToOne(mappedBy = "car",
               cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
               fetch = FetchType.LAZY)
     private Transaction transaction;
 
-    public Car(String carName, int carMileage, Date carProduction, boolean isActive) {
+    public Car(String carName, int carMileage, LocalDate carProduction, boolean isActive) {
         this.carName = carName;
         this.carMileage = carMileage;
         this.carProduction = carProduction;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
     public Car() {
@@ -62,20 +67,20 @@ public class Car {
         this.carMileage = carMileage;
     }
 
-    public Date getCarProduction() {
+    public LocalDate getCarProduction() {
         return carProduction;
     }
 
-    public void setCarProduction(Date carProduction) {
+    public void setCarProduction(LocalDate carProduction) {
         this.carProduction = carProduction;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean getActive() {
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class Car {
                 ", carName='" + carName + '\'' +
                 ", carMileage=" + carMileage +
                 ", carProduction=" + carProduction +
-                ", isActive=" + isActive +
+                ", active=" + active +
                 '}';
     }
 }
