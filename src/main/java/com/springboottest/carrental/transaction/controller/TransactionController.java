@@ -1,7 +1,7 @@
-package com.springboottest.carrental.controller;
+package com.springboottest.carrental.transaction.controller;
 
-import com.springboottest.carrental.entity.Transaction;
-import com.springboottest.carrental.service.TransactionService;
+import com.springboottest.carrental.transaction.entity.Transaction;
+import com.springboottest.carrental.transaction.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,7 +1,7 @@
-package com.springboottest.carrental.service;
+package com.springboottest.carrental.car.service;
 
-import com.springboottest.carrental.dao.CarRepository;
-import com.springboottest.carrental.entity.Car;
+import com.springboottest.carrental.car.dao.CarRepository;
+import com.springboottest.carrental.car.entity.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

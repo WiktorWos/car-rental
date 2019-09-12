@@ -1,36 +1,35 @@
-package com.springboottest.carrental.controller;
+package com.springboottest.carrental.car.controller;
 
-import com.springboottest.carrental.entity.Car;
-import com.springboottest.carrental.service.CarService;
+import com.springboottest.carrental.initbinder.StringTrimmer;
+import com.springboottest.carrental.car.entity.Car;
+import com.springboottest.carrental.car.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @RequestMapping("/cars")
 public class CarController {
     private CarService carService;
-
-    @Autowired
-    public CarController(CarService carService) {
-        this.carService = carService;
-    }
+    private StringTrimmer stringTrimmer;
 
     @InitBinder
-    private void dateBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
-        binder.registerCustomEditor(LocalDate.class, editor);
+    public void initBinder(WebDataBinder webDataBinder) {
+        stringTrimmer.initBinder(webDataBinder);
     }
+
+    @Autowired
+    public CarController(CarService carService, StringTrimmer stringTrimmer) {
+        this.carService = carService;
+        this.stringTrimmer = stringTrimmer;
+    }
+
 
     @GetMapping("/findAll")
     public String findAll(Model model){
@@ -47,13 +46,14 @@ public class CarController {
     }
 
     @PostMapping("/save")
-    public String saveCar(@ModelAttribute Car car, BindingResult bindingResult) {
+    public String saveCar(@Valid @ModelAttribute Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             System.out.println(bindingResult.getAllErrors());
             return "car-form";
+        } else {
+            carService.save(car);
+            return "redirect:/cars/findAll";
         }
-        carService.save(car);
-        return "redirect:/cars/findAll";
     }
 
 }

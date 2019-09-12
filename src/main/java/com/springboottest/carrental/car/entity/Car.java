@@ -1,11 +1,15 @@
-package com.springboottest.carrental.entity;
+package com.springboottest.carrental.car.entity;
 
 
 
+import com.springboottest.carrental.transaction.entity.Transaction;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "cars")
@@ -15,17 +19,25 @@ public class Car {
     @Column(name = "id")
     private Long id;
 
+    @NotNull(message = "Please enter the car name")
+    @Size(min = 3, max = 40, message = "Min name size is 3, max is 40")
     @Column(name = "car_name")
     private String carName;
 
+    @NotNull(message = "Please enter the mileage")
+    @Max(value = 1000000, message = "Mileage must be less than 1000000")
+    @Min(value = 0, message = "Mileage must be greater than 0")
     @Column(name = "car_mileage")
-    private int carMileage;
+    private Integer carMileage;
 
     @Column(name = "car_production")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate carProduction;
+    @Min(value = 2010)
+    @Max(value = 2019)
+    @NotNull
+    private int carProduction;
 
     @Column(name = "is_active")
+    @NotNull
     private boolean active;
 
     @OneToOne(mappedBy = "car",
@@ -33,7 +45,7 @@ public class Car {
               fetch = FetchType.LAZY)
     private Transaction transaction;
 
-    public Car(String carName, int carMileage, LocalDate carProduction, boolean isActive) {
+    public Car(String carName, Integer carMileage, int carProduction, boolean isActive) {
         this.carName = carName;
         this.carMileage = carMileage;
         this.carProduction = carProduction;
@@ -59,19 +71,19 @@ public class Car {
         this.carName = carName;
     }
 
-    public int getCarMileage() {
+    public Integer getCarMileage() {
         return carMileage;
     }
 
-    public void setCarMileage(int carMileage) {
+    public void setCarMileage(Integer carMileage) {
         this.carMileage = carMileage;
     }
 
-    public LocalDate getCarProduction() {
+    public int getCarProduction() {
         return carProduction;
     }
 
-    public void setCarProduction(LocalDate carProduction) {
+    public void setCarProduction(int carProduction) {
         this.carProduction = carProduction;
     }
 

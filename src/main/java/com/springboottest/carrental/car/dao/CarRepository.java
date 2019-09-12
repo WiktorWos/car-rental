@@ -1,6 +1,6 @@
-package com.springboottest.carrental.dao;
+package com.springboottest.carrental.car.dao;
 
-import com.springboottest.carrental.entity.Car;
+import com.springboottest.carrental.car.entity.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

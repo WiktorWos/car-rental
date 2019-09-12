@@ -1,7 +1,7 @@
-package com.springboottest.carrental.service;
+package com.springboottest.carrental.transaction.service;
 
-import com.springboottest.carrental.dao.TransactionRepository;
-import com.springboottest.carrental.entity.Transaction;
+import com.springboottest.carrental.transaction.dao.TransactionRepository;
+import com.springboottest.carrental.transaction.entity.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

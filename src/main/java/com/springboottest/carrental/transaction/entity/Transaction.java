@@ -1,6 +1,7 @@
-package com.springboottest.carrental.entity;
+package com.springboottest.carrental.transaction.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import com.springboottest.carrental.car.entity.Car;
 
 import javax.persistence.*;
 import java.time.LocalDate;

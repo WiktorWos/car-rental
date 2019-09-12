@@ -6,9 +6,17 @@
 </head>
 <body>
     <form action="#" th:action="@{/cars/save}" th:object="${car}" method="post">
+
         <input type="text" th:field = "*{carName}">
+        <span th:if="${#fields.hasErrors('carName')}" th:errors="*{carName}"></span>
+
         <input type="text" th:field = "*{carMileage}">
-        <input type="date" th:field = "*{carProduction}">
+        <span th:if="${#fields.hasErrors('carMileage')}" th:errors="*{carMileage}"></span>
+        <select th:field="*{carProduction}">
+            <option th:each="i : ${#numbers.sequence(2010, 2019)}"
+                    th:value="${i}" th:text="${i}">
+            </option>
+        </select>
         <label><input type="checkbox" value="true" th:field = "*{active}">Active</label>
         <button type="submit">Save</button>
     </form>

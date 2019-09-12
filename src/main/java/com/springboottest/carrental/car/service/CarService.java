@@ -1,6 +1,6 @@
-package com.springboottest.carrental.service;
+package com.springboottest.carrental.car.service;
 
-import com.springboottest.carrental.entity.Car;
+import com.springboottest.carrental.car.entity.Car;
 
 import java.util.List;
 
