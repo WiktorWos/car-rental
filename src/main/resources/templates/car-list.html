@@ -8,9 +8,7 @@
 <body>
 
     <div class="sidenav">
-        <a href="#">Link</a>
-        <a href="#">Link</a>
-        <a href="#">Link</a>
+        <a th:href="@{/cars/addCar}">Add car</a>
     </div>
 
     <div class="header">
@@ -21,22 +19,39 @@
         <div class="table">
             <table>
                 <thead>
-                <tr>
-                    <th>Car id</th>
-                    <th>Car name</th>
-                    <th>Car mileage</th>
-                    <th>Car production date</th>
-                    <th>Active</th>
-                </tr>
+                    <tr>
+                        <th>Car name</th>
+                        <th>Car mileage</th>
+                        <th>Car production date</th>
+                        <th>Active</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each ="tempCar : ${cars}">
-                    <td th:text="${tempCar.id}"/>
-                    <td th:text="${tempCar.carName}"/>
-                    <td th:text="${tempCar.carMileage}"/>
-                    <td th:text="${tempCar.carProduction}"/>
-                    <td th:text="${tempCar.active}"/>
-                </tr>
+                    <tr th:each ="tempCar : ${cars}">
+                        <td th:text="${tempCar.carName}"/>
+                        <td th:text="${tempCar.carMileage}"/>
+                        <td th:text="${tempCar.carProduction}"/>
+                        <td th:text="${tempCar.active}"/>
+                        <td>
+                            <form th:action="@{delete}" method="get">
+                                <input type="hidden" name="id" th:value="${tempCar.id}" />
+                                <input type="submit" value="Delete"
+                                       onclick="if(!(confirm('Are you sure you want to delete this customer'))) return false"/>
+                            </form>
+
+                            <form th:action="@{update}" method="get">
+                                <input type="hidden" name="id" th:value="${tempCar.id}" />
+                                <input type="submit" value="Update"/>
+                            </form>
+                        </td>
+                        <!--<td>-->
+                            <!--<form th:action="@{update}" method="get">-->
+                                <!--<input type="hidden" name="id" th:value="${tempCar.id}" />-->
+                                <!--<input type="submit" value="Update"/>-->
+                            <!--</form>-->
+                        <!--</td>-->
+                    </tr>
                 </tbody>
             </table>
         </div>

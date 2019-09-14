@@ -3,22 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Car form</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/form.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 <body>
-    <form action="#" th:action="@{/cars/save}" th:object="${car}" method="post">
+    <div class="sidenav">
+        <a th:href="@{/cars/findAll}">Car list</a>
+    </div>
 
-        <input type="text" th:field = "*{carName}">
-        <span th:if="${#fields.hasErrors('carName')}" th:errors="*{carName}"></span>
+    <div class="header">
+        <h3>Add a car</h3>
+    </div>
 
-        <input type="text" th:field = "*{carMileage}">
-        <span th:if="${#fields.hasErrors('carMileage')}" th:errors="*{carMileage}"></span>
-        <select th:field="*{carProduction}">
-            <option th:each="i : ${#numbers.sequence(2010, 2019)}"
-                    th:value="${i}" th:text="${i}">
-            </option>
-        </select>
-        <label><input type="checkbox" value="true" th:field = "*{active}">Active</label>
-        <button type="submit">Save</button>
-    </form>
+    <div class="content">
+        <div class="container">
+            <form action="#" th:action="@{/cars/save}" th:object="${car}" method="post">
+                <input type="hidden" th:value="*{id}" name="id">
+
+                <input type="text" placeholder="Car name" th:field = "*{carName}">
+                <span th:if="${#fields.hasErrors('carName')}" th:errors="*{carName}"></span>
+
+                <input type="text" placeholder="Car mileage" th:field = "*{carMileage}">
+                <span th:if="${#fields.hasErrors('carMileage')}" th:errors="*{carMileage}"></span>
+                <select th:field="*{carProduction}">
+                    <option value="0" disabled selected>Select car production year</option>
+                    <option th:each="i : ${#numbers.sequence(2010, 2019)}"
+                            th:value="${i}" th:text="${i}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('carProduction')}" th:errors="*{carProduction}"></span>
+                <div class="active">
+                    <input id="active" type="checkbox" value="true" th:field = "*{active}">
+                    <label for="active">Active</label>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

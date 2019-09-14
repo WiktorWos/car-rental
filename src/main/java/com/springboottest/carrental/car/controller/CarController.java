@@ -56,4 +56,17 @@ public class CarController {
         }
     }
 
+    @GetMapping("/delete")
+    public String deleteCar(@RequestParam Long id) {
+        carService.deleteById(id);
+        return "redirect:/cars/findAll";
+    }
+
+    @GetMapping("/update")
+    public String updateCar(@RequestParam Long id, Model model) {
+        Car car = carService.getById(id);
+        model.addAttribute("car",car);
+        return "car-form";
+    }
+
 }

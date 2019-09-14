@@ -1,0 +1,73 @@
+/* Style inputs */
+input[type = text], select {
+    width: 100%;
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    margin: 8px 0;
+    display: inline-block;
+    /*border: 1px solid #1E2027;*/
+    /*border-radius: 4px;*/
+    box-sizing: border-box;
+    /*background-color: #c3c9e0;*/
+    background: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #1E2027;
+    color: #515669;
+}
+
+label {
+    display: inline-block;
+}
+
+select {
+    /*width: 25%;*/
+    border: 1px solid #1E2027;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+input:focus{
+    outline: none;
+}
+
+select:focus{
+    outline: none;
+}
+
+/* Style the submit button */
+button {
+    /*width: 50%;*/
+    /*background-color: #4CAF50;*/
+    /*color: white;*/
+    /*padding: 14px 20px;*/
+    /*margin: 8px 0;*/
+    /*border: none;*/
+    /*border-radius: 4px;*/
+    cursor: pointer;
+    background: #dce2fa;
+    color: #515669;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+}
+
+/* Add a background color to the submit button on mouse-over */
+button:hover {
+    background-color: #1E2027;
+}
+
+.container{
+    width: 50%;
+    margin-left: 10px;
+}
+
+.active {
+    margin: 10px 0 10px 0;
+}
