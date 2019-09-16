@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car form</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/form.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+    <div class="sidenav">
+        <a th:href="@{/cars/findAll}">Car list</a>
+    </div>
+
+    <div class="header">
+        <h3>Add a car</h3>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <form action="#" th:action="@{/customer/save}" th:object="${customer}" method="post">
+                <input type="hidden" th:value="*{id}" name="id">
+
+                <input type="text" placeholder="First name" th:field = "*{firstName}">
+                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+
+                <input type="text" placeholder="Last name" th:field = "*{lastName}">
+                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+
+                <input type="text" placeholder="Email" th:field = "*{email}">
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+                <select th:field="*{experience}">
+                    <option value="0" disabled selected>Select years of experience</option>
+                    <option th:each="i : ${#numbers.sequence(1, 99)}"
+                            th:value="${i}" th:text="${i}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></span>
+
+                <input type="text" placeholder="Driving licence number" th:field = "*{drivingLicenceNumber}">
+                <span th:if="${#fields.hasErrors('drivingLicenceNumber')}" th:errors="*{drivingLicenceNumber}"></span>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

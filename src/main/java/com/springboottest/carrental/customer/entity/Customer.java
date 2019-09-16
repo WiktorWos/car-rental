@@ -1,8 +1,10 @@
 package com.springboottest.carrental.customer.entity;
 
 import com.springboottest.carrental.transaction.entity.Transaction;
+import com.springboottest.carrental.validation.ExtendedEmailValidator;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +16,29 @@ public class Customer {
     @Column(name = "id")
     private Long id;
 
+    @NotNull(message = "Please enter first name")
+    @Size(min = 3, max = 20, message = "Min name size is 3, max is 20")
     @Column(name = "first_name")
     private String firstName;
 
+    @NotNull(message = "Please enter last name")
+    @Size(min = 3, max = 20, message = "Min name size is 3, max is 20")
     @Column(name = "last_name")
     private String lastName;
 
+    @Min(value = 1, message = "Experience must be greater or equal to 1 year")
     @Column(name = "experience")
     private int experience;
 
     @Column(name = "email")
+    @NotNull(message = "Please enter email")
+    @ExtendedEmailValidator
     private String email;
 
     @Column(name = "driving_licence_number")
+    @NotNull(message = "Please enter driving licence number")
+    @Pattern(regexp = "[a-z0-9]{4}\\/\\d{2}\\/\\d{4}", message = "Wrong pattern, should be: xx/yy/dddd, where x are " +
+            "letters and digits, and y, d are digits")
     private String drivingLicenceNumber;
 
     @OneToMany(mappedBy = "customer",
