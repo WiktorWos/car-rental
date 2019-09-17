@@ -22,7 +22,6 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Transaction id</th>
                     <th>Start date</th>
                     <th>Start mileage</th>
                     <th>Car name</th>
@@ -30,7 +29,6 @@
                 </thead>
                 <tbody>
                 <tr th:each ="tempTransaction : ${transactions}">
-                    <td th:text="${tempTransaction.id}"/>
                     <td th:text="${tempTransaction.startDate}"/>
                     <td th:text="${tempTransaction.startMileage}"/>
                     <td th:text="${tempTransaction.getCar().carName}"/>

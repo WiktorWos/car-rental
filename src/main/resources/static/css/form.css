@@ -71,3 +71,8 @@ button:hover {
 .active {
     margin: 10px 0 10px 0;
 }
+
+a {
+    text-decoration: none;
+    color: #515669;
+}

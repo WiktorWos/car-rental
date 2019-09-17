@@ -1,6 +1,7 @@
 package com.springboottest.carrental.customer.controller;
 
 import com.springboottest.carrental.customer.entity.Customer;
+import com.springboottest.carrental.customer.jackson.CustomerPojoToJson;
 import com.springboottest.carrental.customer.service.CustomerService;
 import com.springboottest.carrental.initbinder.StringTrimmer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,14 @@ import javax.validation.Valid;
 public class CustomerController {
     private CustomerService customerService;
     private StringTrimmer stringTrimmer;
+    private CustomerPojoToJson customerPojoToJson;
 
     @Autowired
-    public CustomerController(CustomerService customerService, StringTrimmer stringTrimmer) {
+    public CustomerController(CustomerService customerService, StringTrimmer stringTrimmer,
+                              CustomerPojoToJson customerPojoToJson) {
         this.customerService = customerService;
         this.stringTrimmer = stringTrimmer;
+        this.customerPojoToJson = customerPojoToJson;
     }
 
     @InitBinder
@@ -42,13 +46,14 @@ public class CustomerController {
         return "customer-form";
     }
 
-    @PostMapping("/save")
-    public String saveCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
+    @PostMapping("/confirm")
+    public String confirmCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "customer-form";
         }
-        customerService.save(customer);
-        return "redirect:/customer/findAll";
+//        customerService.save(customer);
+        customerPojoToJson.convertToJson(customer);
+        return "redirect:/transaction/addTransaction";
     }
 
     @GetMapping("/update")

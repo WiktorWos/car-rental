@@ -105,11 +105,11 @@ public class Customer {
         this.email = email;
     }
 
-    public List<Transaction> getTransaction() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransaction(List<Transaction> transactions) {
+    public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
