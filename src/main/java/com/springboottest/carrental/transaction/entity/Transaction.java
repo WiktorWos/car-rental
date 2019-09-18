@@ -5,7 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.springboottest.carrental.car.entity.Car;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
@@ -16,8 +17,8 @@ public class Transaction {
     private Long id;
 
     @Column(name = "start_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss")
+    private LocalDateTime startDate;
 
     @Column(name = "start_mileage")
     private int startMileage;
@@ -25,7 +26,7 @@ public class Transaction {
     @Column(name = "price")
     private double price;
 
-    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
               fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private Car car;
@@ -38,7 +39,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(LocalDate startDate, int startMileage, double price) {
+    public Transaction(LocalDateTime startDate, int startMileage, double price) {
         this.startDate = startDate;
         this.startMileage = startMileage;
         this.price = price;
@@ -52,11 +53,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 

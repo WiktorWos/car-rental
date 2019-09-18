@@ -9,7 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cars")
@@ -40,10 +42,10 @@ public class Car {
     @NotNull
     private boolean active;
 
-    @OneToOne(mappedBy = "car",
+    @OneToMany(mappedBy = "car",
               cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
               fetch = FetchType.LAZY)
-    private Transaction transaction;
+    private List<Transaction> transactions;
 
     public Car(String carName, Integer carMileage, int carProduction, boolean isActive) {
         this.carName = carName;
@@ -95,6 +97,14 @@ public class Car {
         this.active = active;
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transaction) {
+        this.transactions = transaction;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -104,5 +114,13 @@ public class Car {
                 ", carProduction=" + carProduction +
                 ", active=" + active +
                 '}';
+    }
+
+    public void addTransaction(Transaction transaction) {
+        if(transactions == null) {
+            transactions = new ArrayList<>();
+        }
+        transactions.add(transaction);
+        transaction.setCar(this);
     }
 }

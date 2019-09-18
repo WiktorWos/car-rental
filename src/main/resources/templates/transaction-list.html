@@ -23,15 +23,34 @@
                 <thead>
                 <tr>
                     <th>Start date</th>
-                    <th>Start mileage</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
                     <th>Car name</th>
+                    <th>Price</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each ="tempTransaction : ${transactions}">
-                    <td th:text="${tempTransaction.startDate}"/>
-                    <td th:text="${tempTransaction.startMileage}"/>
-                    <td th:text="${tempTransaction.getCar().carName}"/>
+                    <td th:text="${#temporals.format(tempTransaction.startDate, 'yyyy-MM-dd HH:mm')}"/>
+                    <td th:text="${tempTransaction.customer.firstName}"/>
+                    <td th:text="${tempTransaction.customer.lastName}"/>
+                    <td th:text="${tempTransaction.customer.email}"/>
+                    <td th:text="${tempTransaction.car.carName}"/>
+                    <td th:text="${tempTransaction.price}"/>
+                    <td>
+                        <form th:action="@{delete}" method="get">
+                            <input type="hidden" name="id" th:value="${tempTransaction.id}" />
+                            <input type="submit" value="Delete"
+                                   onclick="if(!(confirm('Are you sure you want to delete this customer'))) return false"/>
+                        </form>
+
+                        <form th:action="@{update}" method="get">
+                            <input type="hidden" name="id" th:value="${tempTransaction.id}" />
+                            <input type="submit" value="Update"/>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
