@@ -9,4 +9,6 @@ public interface CustomerService {
     void save(Customer customer);
     Customer getById(Long id);
     void deleteById(Long id);
+    boolean isEmailInUse(String email);
+    boolean isDrivingLicenceInUse(String email);
 }

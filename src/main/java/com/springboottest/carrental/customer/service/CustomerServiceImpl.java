@@ -40,4 +40,24 @@ public class CustomerServiceImpl implements CustomerService{
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public boolean isEmailInUse(String email) {
+        boolean isEmailInUse = true;
+        if(customerRepository.findByEmail(email) == null) {
+            isEmailInUse = false;
+        }
+        return isEmailInUse;
+    }
+
+    @Override
+    @Transactional
+    public boolean isDrivingLicenceInUse(String email) {
+        boolean isDrivingLicenceInUse = true;
+        if(customerRepository.findByDrivingLicence(email) == null) {
+            isDrivingLicenceInUse = false;
+        }
+        return isDrivingLicenceInUse;
+    }
 }

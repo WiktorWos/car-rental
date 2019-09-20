@@ -2,6 +2,8 @@ package com.springboottest.carrental.customer.entity;
 
 import com.springboottest.carrental.transaction.entity.Transaction;
 import com.springboottest.carrental.validation.ExtendedEmailValidator;
+import com.springboottest.carrental.validation.UniqueDrivingLicence;
+import com.springboottest.carrental.validation.UniqueEmail;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -33,12 +35,14 @@ public class Customer {
     @Column(name = "email")
     @NotNull(message = "Please enter email")
     @ExtendedEmailValidator
+    @UniqueEmail
     private String email;
 
     @Column(name = "driving_licence_number")
     @NotNull(message = "Please enter driving licence number")
     @Pattern(regexp = "[a-z0-9]{4}\\/\\d{2}\\/\\d{4}", message = "Wrong pattern, should be: xx/yy/dddd, where x are " +
             "letters and digits, and y, d are digits")
+    @UniqueDrivingLicence
     private String drivingLicenceNumber;
 
     @OneToMany(mappedBy = "customer",
