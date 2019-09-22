@@ -1,9 +1,11 @@
 package com.springboottest.carrental.customer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.springboottest.carrental.transaction.entity.Transaction;
 import com.springboottest.carrental.validation.ExtendedEmailValidator;
 import com.springboottest.carrental.validation.UniqueDrivingLicence;
 import com.springboottest.carrental.validation.UniqueEmail;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "customers")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "transactions"})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +45,7 @@ public class Customer {
     @NotNull(message = "Please enter driving licence number")
     @Pattern(regexp = "[a-z0-9]{4}\\/\\d{2}\\/\\d{4}", message = "Wrong pattern, should be: xx/yy/dddd, where x are " +
             "letters and digits, and y, d are digits")
-    @UniqueDrivingLicence
+//    @UniqueDrivingLicence
     private String drivingLicenceNumber;
 
     @OneToMany(mappedBy = "customer",
@@ -134,7 +137,20 @@ public class Customer {
         if(transactions == null) {
             transactions = new ArrayList<>();
         }
+        if(transactions.contains(transaction)) {
+            return;
+        }
         transactions.add(transaction);
         transaction.setCustomer(this);
+    }
+
+    public void removeTransaction(Transaction transaction) {
+        //prevent endless loop
+        if (!transactions.contains(transaction))
+            return ;
+        //remove the account
+        transactions.remove(transaction);
+        //remove myself from the twitter account
+        transaction.setCustomer(null);
     }
 }

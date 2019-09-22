@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/form.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+    <div class="sidenav">
+        <a th:href="@{/cars/findAll}">Select customer</a>
+    </div>
+
+    <div class="header">
+        <h3>New transaction</h3>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <form action="#" th:action="@{/customer/confirm}" th:object="${customer}" method="post">
+
+                <select th:field="*{id}">
+                    <option value="" disabled selected>Select customer</option>
+                    <option th:each="i : ${customers}"
+                            th:value="${i.id}" th:text="${i}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
+
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

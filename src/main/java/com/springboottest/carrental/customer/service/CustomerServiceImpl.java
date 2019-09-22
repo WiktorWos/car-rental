@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Validator;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class CustomerServiceImpl implements CustomerService{
     @Transactional
     public boolean isEmailInUse(String email) {
         boolean isEmailInUse = true;
+        System.out.println(customerRepository.findByEmail(email));
         if(customerRepository.findByEmail(email) == null) {
             isEmailInUse = false;
         }

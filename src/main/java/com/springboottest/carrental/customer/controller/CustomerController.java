@@ -48,6 +48,13 @@ public class CustomerController {
 
     @PostMapping("/confirm")
     public String confirmCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
+
+        if(customer.getId() != null) {
+            customer = customerService.getById(customer.getId());
+            customerPojoToJson.convertToJson(customer);
+            return "redirect:/transaction/addTransaction";
+        }
+
         if(bindingResult.hasErrors()) {
             return "customer-form";
         }
@@ -67,5 +74,12 @@ public class CustomerController {
     public String deleteCustomer(@RequestParam Long id) {
         customerService.deleteById(id);
         return "redirect:/customer/findAll";
+    }
+
+    @GetMapping("/select")
+    public String selectCustomer(Model model) {
+        model.addAttribute("customers",customerService.findAll());
+        model.addAttribute("customer", new Customer());
+        return "customer-select";
     }
 }

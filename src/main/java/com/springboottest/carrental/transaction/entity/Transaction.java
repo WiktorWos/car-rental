@@ -90,7 +90,20 @@ public class Transaction {
     }
 
     public void setCustomer(Customer customer) {
+        if (sameAsFormer(customer))
+            return ;
+        Customer oldCustomer = this.customer;
         this.customer = customer;
+        if (oldCustomer!=null){
+            oldCustomer.removeTransaction(this);
+        }
+        if (customer!=null){
+            customer.addTransaction(this);
+        }
+    }
+
+    private boolean sameAsFormer(Customer newCustomer) {
+        return customer==null? newCustomer == null : customer.equals(newCustomer);
     }
 
     @Override
@@ -101,7 +114,6 @@ public class Transaction {
                 ", startMileage=" + startMileage +
                 ", price=" + price +
                 ", car=" + car +
-                ", customer=" + customer +
                 '}';
     }
 }

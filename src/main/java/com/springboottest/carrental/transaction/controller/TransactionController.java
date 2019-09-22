@@ -67,9 +67,12 @@ public class TransactionController {
             return "transaction-form";
         }
 
+        //update
         if (transaction.getId() != null) {
-            transaction.setCustomer(updateTransaction.getCustomer());
-            transaction.setPrice(updateTransaction.getPrice());
+            Long carId = transaction.getCar().getId();
+            transaction = transactionService.getById(transaction.getId());
+            transaction.setCar(carService.getById(carId));
+            System.out.println(transaction);
         }
 
         transaction.setCar(carService.getById(transaction.getCar().getId()));
@@ -80,6 +83,12 @@ public class TransactionController {
 
         if(transaction.getCustomer() == null) {
             Customer customer = customerJsonToPojo.convertToPojo();
+
+            //transaction with existing customer
+            if(customer.getId() != null) {
+                customer = customerService.getById(customer.getId());
+            }
+
             customer.addTransaction(transaction);
             transaction.setPrice(priceBase.getPriceBase(transaction.getCustomer().getExperience()));
         }
@@ -104,12 +113,16 @@ public class TransactionController {
         Transaction transaction = transactionService.getById(id);
         transaction.getCar().setActive(false);
 
+
         if(transaction.getCustomer().getTransactions().size() == 1) {
             Long customerId = transaction.getCustomer().getId();
-            transaction.setCustomer(null);
+            transaction.getCustomer().removeTransaction(transaction);
             customerService.deleteById(customerId);
+            transactionService.deleteById(id);
+            return "redirect:/transaction/findAll";
         }
 
+        transaction.getCustomer().removeTransaction(transaction);
         transactionService.deleteById(id);
         return "redirect:/transaction/findAll";
     }
