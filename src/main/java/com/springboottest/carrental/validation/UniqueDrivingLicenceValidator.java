@@ -1,5 +1,6 @@
 package com.springboottest.carrental.validation;
 
+import com.springboottest.carrental.customer.entity.Customer;
 import com.springboottest.carrental.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,17 +12,16 @@ public class UniqueDrivingLicenceValidator implements ConstraintValidator<Unique
     @Autowired
     private CustomerService customerService;
 
-//    @Autowired
-//    public UniqueDrivingLicenceValidator(CustomerService customerService) {
-//        this.customerService = customerService;
-//    }
-
     @Override
     public void initialize(UniqueDrivingLicence constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return (value != null) && (!customerService.isDrivingLicenceInUse(value));
+        Customer customer = customerService.isDrivingLicenceInUse(value);
+        if((customer != null) && customer.getOnUpdate()){
+            return true;
+        }
+        return (value != null) && (customerService.isDrivingLicenceInUse(value) == null);
     }
 }

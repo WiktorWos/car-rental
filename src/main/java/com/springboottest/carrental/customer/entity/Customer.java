@@ -5,7 +5,6 @@ import com.springboottest.carrental.transaction.entity.Transaction;
 import com.springboottest.carrental.validation.ExtendedEmailValidator;
 import com.springboottest.carrental.validation.UniqueDrivingLicence;
 import com.springboottest.carrental.validation.UniqueEmail;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -45,13 +44,16 @@ public class Customer {
     @NotNull(message = "Please enter driving licence number")
     @Pattern(regexp = "[a-z0-9]{4}\\/\\d{2}\\/\\d{4}", message = "Wrong pattern, should be: xx/yy/dddd, where x are " +
             "letters and digits, and y, d are digits")
-//    @UniqueDrivingLicence
+    @UniqueDrivingLicence
     private String drivingLicenceNumber;
 
     @OneToMany(mappedBy = "customer",
             cascade =  {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     private List<Transaction> transactions;
+
+    @Column(name = "on_update")
+    private boolean onUpdate;
 
     public Customer() {
     }
@@ -118,6 +120,14 @@ public class Customer {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public boolean getOnUpdate() {
+        return onUpdate;
+    }
+
+    public void setOnUpdate(boolean onUpdate) {
+        this.onUpdate = onUpdate;
     }
 
     @Override

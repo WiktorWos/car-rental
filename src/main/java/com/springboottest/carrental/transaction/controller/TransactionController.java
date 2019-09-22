@@ -27,7 +27,6 @@ public class TransactionController {
     private CarService carService;
     private CustomerJsonToPojo customerJsonToPojo;
     private PriceBase priceBase;
-    private Transaction updateTransaction;
     private CustomerService customerService;
 
     @Autowired
@@ -100,10 +99,10 @@ public class TransactionController {
 
     @GetMapping("/update")
     public String updateTransaction(@RequestParam Long id, Model model) {
-        updateTransaction = transactionService.getById(id);
-        updateTransaction.getCar().setActive(false);
+        Transaction transaction = transactionService.getById(id);
+        transaction.getCar().setActive(false);
         model.addAttribute("availableCars", carService.findAvailableCars());
-        model.addAttribute("transaction", updateTransaction);
+        model.addAttribute("transaction", transaction);
         return "transaction-form";
     }
 

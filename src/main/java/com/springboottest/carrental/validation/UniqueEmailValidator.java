@@ -1,5 +1,6 @@
 package com.springboottest.carrental.validation;
 
+import com.springboottest.carrental.customer.entity.Customer;
 import com.springboottest.carrental.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,17 +13,16 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     @Autowired
     private CustomerService customerService;
 
-//    @Autowired
-//    public UniqueEmailValidator(CustomerService customerService) {
-//        this.customerService = customerService;
-//    }
-
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return (value!= null) && (!customerService.isEmailInUse(value));
+        Customer customer = customerService.isEmailInUse(value);
+        if((customer != null) && customer.getOnUpdate()){
+            return true;
+        }
+        return (value != null) && (customerService.isEmailInUse(value) == null);
     }
 }

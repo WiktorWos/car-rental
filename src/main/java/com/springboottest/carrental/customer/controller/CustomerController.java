@@ -49,6 +49,7 @@ public class CustomerController {
     @PostMapping("/confirm")
     public String confirmCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
 
+        //transaction with existing customer
         if(customer.getId() != null) {
             customer = customerService.getById(customer.getId());
             customerPojoToJson.convertToJson(customer);
@@ -58,16 +59,28 @@ public class CustomerController {
         if(bindingResult.hasErrors()) {
             return "customer-form";
         }
-//        customerService.save(customer);
+        customer.setOnUpdate(false);
         customerPojoToJson.convertToJson(customer);
         return "redirect:/transaction/addTransaction";
+    }
+
+    @PostMapping("/save")
+    public String saveCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "customer-update-form";
+        }
+        customer.setOnUpdate(false);
+        customerService.save(customer);
+        return "redirect:/customer/findAll";
     }
 
     @GetMapping("/update")
     public String updateCustomer(@RequestParam Long id, Model model) {
         Customer customer = customerService.getById(id);
+        customer.setOnUpdate(true);
+        customerService.save(customer);
         model.addAttribute("customer", customer);
-        return "customer-form";
+        return "customer-update-form";
     }
 
     @GetMapping("/delete")

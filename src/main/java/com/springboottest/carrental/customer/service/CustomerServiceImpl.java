@@ -44,22 +44,21 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     @Transactional
-    public boolean isEmailInUse(String email) {
-        boolean isEmailInUse = true;
-        System.out.println(customerRepository.findByEmail(email));
-        if(customerRepository.findByEmail(email) == null) {
-            isEmailInUse = false;
+    public Customer isEmailInUse(String email) {
+        Customer customer = customerRepository.findByEmail(email);
+        if(customer == null) {
+            return null;
         }
-        return isEmailInUse;
+        return customer;
     }
 
     @Override
     @Transactional
-    public boolean isDrivingLicenceInUse(String email) {
-        boolean isDrivingLicenceInUse = true;
-        if(customerRepository.findByDrivingLicence(email) == null) {
-            isDrivingLicenceInUse = false;
+    public Customer isDrivingLicenceInUse(String drivingLicence) {
+        Customer customer = customerRepository.findByDrivingLicence(drivingLicence);
+        if(customer == null) {
+            return null;
         }
-        return isDrivingLicenceInUse;
+        return customer;
     }
 }
