@@ -17,8 +17,17 @@
 
     <div class="content">
         <div class="container">
-            <form action="#" th:action="@{/customer/confirm}" th:object="${customer}" method="post">
+            <h3>Search customer by last name or driving licence number:</h3>
+            <form action="#" th:action="@{/customer/search}" method="get">
+                <!--<input type="text" placeholder="First name" th:object = "${text}">-->
+                <!--<textarea th:text="${text}" placeholder="Search"/>-->
+                <input type="text" th:value="${text}" name="text"/>
+                <button type="submit">Search</button>
+            </form>
 
+            <br/><br/>
+            <form action="#" th:action="@{/customer/confirm}" th:object="${customer}" method="post">
+                <h3>Select existing customer:</h3>
                 <select th:field="*{id}">
                     <option value="" disabled selected>Select customer</option>
                     <option th:each="i : ${customers}"

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class CustomCustomerRepositoryImpl implements CustomCustomerRepository {
@@ -43,5 +45,18 @@ public class CustomCustomerRepositoryImpl implements CustomCustomerRepository {
         }
 
         return customer;
+    }
+
+    @Override
+    public List<Customer> findByLastName(String lastName) {
+        List<Customer> customers;
+        customers = entityManager
+                    .createQuery("FROM Customer c WHERE c.lastName = :lastName", Customer.class)
+                    .setParameter("lastName",lastName).getResultList();
+        if(customers.isEmpty()) {
+            customers = null;
+        }
+
+        return customers;
     }
 }

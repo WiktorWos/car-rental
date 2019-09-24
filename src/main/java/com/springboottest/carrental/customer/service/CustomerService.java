@@ -11,4 +11,5 @@ public interface CustomerService {
     void deleteById(Long id);
     Customer isEmailInUse(String email);
     Customer isDrivingLicenceInUse(String drivingLicence);
+    List<Customer> searchCustomerByName(String text);
 }

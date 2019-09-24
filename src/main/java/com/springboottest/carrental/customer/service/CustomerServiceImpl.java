@@ -10,7 +10,7 @@ import javax.validation.Validator;
 import java.util.List;
 
 @Service
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Autowired
@@ -60,5 +60,11 @@ public class CustomerServiceImpl implements CustomerService{
             return null;
         }
         return customer;
+    }
+
+    @Override
+    @Transactional
+    public List<Customer> searchCustomerByName(String text) {
+        return customerRepository.findByLastName(text);
     }
 }

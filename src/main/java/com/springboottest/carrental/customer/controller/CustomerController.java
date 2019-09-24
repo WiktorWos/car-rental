@@ -93,6 +93,25 @@ public class CustomerController {
     public String selectCustomer(Model model) {
         model.addAttribute("customers",customerService.findAll());
         model.addAttribute("customer", new Customer());
+        model.addAttribute("text","");
         return "customer-select";
+    }
+
+    @GetMapping("/search")
+    public String searchCustomer(@RequestParam String text, Model model) {
+
+
+        if(text != null){
+            Customer customer = customerService.isDrivingLicenceInUse(text);
+            if(customer != null) {
+                model.addAttribute("customers",customer);
+                return "customer-list";
+            }
+            if(customerService.searchCustomerByName(text) != null){
+                model.addAttribute("customers",customerService.searchCustomerByName(text));
+                return "customer-list";
+            }
+        }
+        return "redirect:/customer/select";
     }
 }
