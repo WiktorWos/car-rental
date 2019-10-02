@@ -13,7 +13,7 @@ public class CustomerPojoToJsonImpl implements CustomerPojoToJson {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(new File("data/customerOutput.json"),customer);
+            mapper.writeValue(new File("data/customerOutput.json"), customer);
         } catch (Exception e) {
             e.printStackTrace();
         }

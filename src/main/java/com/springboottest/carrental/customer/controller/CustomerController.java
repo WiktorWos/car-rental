@@ -1,6 +1,7 @@
 package com.springboottest.carrental.customer.controller;
 
 import com.springboottest.carrental.customer.entity.Customer;
+import com.springboottest.carrental.customer.search.SearchedCustomerInput;
 import com.springboottest.carrental.customer.jackson.CustomerPojoToJson;
 import com.springboottest.carrental.customer.service.CustomerService;
 import com.springboottest.carrental.initbinder.StringTrimmer;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -49,19 +51,31 @@ public class CustomerController {
     @PostMapping("/confirm")
     public String confirmCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
 
-        //transaction with existing customer
-        if(customer.getId() != null) {
-            customer = customerService.getById(customer.getId());
-            customerPojoToJson.convertToJson(customer);
+        if(isCustomerAlreadyAdded(customer)) {
+            performTransactionWithExistingCustomer(customer);
             return "redirect:/transaction/addTransaction";
         }
 
         if(bindingResult.hasErrors()) {
             return "customer-form";
         }
+
+        performTransactionWithNewCustomer(customer);
+        return "redirect:/transaction/addTransaction";
+    }
+
+    private boolean isCustomerAlreadyAdded(Customer customer) {
+        return customer.getId() != null;
+    }
+
+    private void performTransactionWithExistingCustomer(Customer customer) {
+        customer = customerService.getById(customer.getId());
+        customerPojoToJson.convertToJson(customer);
+    }
+
+    private void performTransactionWithNewCustomer(Customer customer){
         customer.setOnUpdate(false);
         customerPojoToJson.convertToJson(customer);
-        return "redirect:/transaction/addTransaction";
     }
 
     @PostMapping("/save")
@@ -69,18 +83,28 @@ public class CustomerController {
         if(bindingResult.hasErrors()) {
             return "customer-update-form";
         }
+
+        saveUpdatedCustomer(customer);
+        return "redirect:/customer/findAll";
+    }
+
+    private void saveUpdatedCustomer(Customer customer) {
         customer.setOnUpdate(false);
         customerService.save(customer);
-        return "redirect:/customer/findAll";
     }
 
     @GetMapping("/update")
     public String updateCustomer(@RequestParam Long id, Model model) {
+        Customer customer = performUpdateOnCustomer(id);
+        model.addAttribute("customer", customer);
+        return "customer-update-form";
+    }
+
+    private Customer performUpdateOnCustomer(Long id) {
         Customer customer = customerService.getById(id);
         customer.setOnUpdate(true);
         customerService.save(customer);
-        model.addAttribute("customer", customer);
-        return "customer-update-form";
+        return customer;
     }
 
     @GetMapping("/delete")
@@ -91,27 +115,35 @@ public class CustomerController {
 
     @GetMapping("/select")
     public String selectCustomer(Model model) {
-        model.addAttribute("customers",customerService.findAll());
+        model.addAttribute("customers", customerService.findAll());
         model.addAttribute("customer", new Customer());
-        model.addAttribute("text","");
+        model.addAttribute("searchedCustomer", new SearchedCustomerInput());
         return "customer-select";
     }
 
     @GetMapping("/search")
-    public String searchCustomer(@RequestParam String text, Model model) {
+    public String searchCustomer(@Valid @ModelAttribute SearchedCustomerInput searchedCustomerInput, Model model) {
+        String searchInput = searchedCustomerInput.getSearchByLastNameOrDrivingLicence();
+        List <Customer> customersFoundByDrivingLicence = customerService.isDrivingLicenceInUse(searchInput);
+        int foundCustomerIndex = 0;
 
-
-        if(text != null){
-            Customer customer = customerService.isDrivingLicenceInUse(text);
-            if(customer != null) {
-                model.addAttribute("customers",customer);
-                return "customer-list";
-            }
-            if(customerService.searchCustomerByName(text) != null){
-                model.addAttribute("customers",customerService.searchCustomerByName(text));
-                return "customer-list";
-            }
+        if(isCustomerFound(customersFoundByDrivingLicence)) {
+            model.addAttribute("customers", customersFoundByDrivingLicence.get(foundCustomerIndex));
+            return "customer-list";
         }
+
+        List <Customer> customersFoundByLastName = customerService.searchCustomerByName(searchInput);
+        if(isCustomerFound(customersFoundByLastName)){
+            model.addAttribute("customers", customersFoundByLastName.get(foundCustomerIndex));
+            return "customer-list";
+        }
+
         return "redirect:/customer/select";
     }
+
+    private boolean isCustomerFound(List<Customer> customers) {
+        return !customers.isEmpty();
+    }
+
+
 }

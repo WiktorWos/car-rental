@@ -7,7 +7,7 @@ import java.util.List;
 
 @Repository
 public interface CustomCustomerRepository {
-    Customer findByEmail(String email);
-    Customer findByDrivingLicence(String drivingLicence);
+    List<Customer> findByEmail(String email);
+    List<Customer> findByDrivingLicence(String drivingLicence);
     List<Customer> findByLastName(String lastName);
 }

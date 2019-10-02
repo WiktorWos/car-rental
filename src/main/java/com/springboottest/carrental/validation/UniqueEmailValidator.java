@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 
 
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
@@ -19,10 +20,18 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        Customer customer = customerService.isEmailInUse(value);
-        if((customer != null) && customer.getOnUpdate()){
+        List<Customer> customers = customerService.isEmailInUse(value);
+        if(isCustomerOnUpdate(customers)){
             return true;
         }
-        return (value != null) && (customerService.isEmailInUse(value) == null);
+        return isEmailInUse(customers);
+    }
+
+    private boolean isCustomerOnUpdate(List<Customer> customers) {
+        return !customers.isEmpty() && customers.get(0).getOnUpdate();
+    }
+
+    private boolean isEmailInUse(List<Customer> customers) {
+        return customers.isEmpty();
     }
 }

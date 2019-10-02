@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 
 
 public class UniqueDrivingLicenceValidator implements ConstraintValidator<UniqueDrivingLicence, String> {
@@ -18,10 +19,18 @@ public class UniqueDrivingLicenceValidator implements ConstraintValidator<Unique
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        Customer customer = customerService.isDrivingLicenceInUse(value);
-        if((customer != null) && customer.getOnUpdate()){
+        List<Customer> customers = customerService.isDrivingLicenceInUse(value);
+        if(isCustomerOnUpdate(customers)){
             return true;
         }
-        return (value != null) && (customerService.isDrivingLicenceInUse(value) == null);
+        return isDrivingLicenceInUse(customers);
+    }
+
+    private boolean isCustomerOnUpdate(List<Customer> customers) {
+        return !customers.isEmpty() && customers.get(0).getOnUpdate();
+    }
+
+    private boolean isDrivingLicenceInUse(List<Customer> customers) {
+        return customers.isEmpty();
     }
 }

@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,43 +17,33 @@ public class CustomCustomerRepositoryImpl implements CustomCustomerRepository {
     }
 
     @Override
-    public Customer findByEmail(String email) {
-        Customer customer;
+    public List<Customer> findByEmail(String email) {
+        List <Customer> customers;
 
-        try {
-            customer = (Customer) entityManager.createQuery("FROM Customer c WHERE c.email = :email")
-                    .setParameter("email",email).getSingleResult();
-        } catch (NoResultException e) {
-            customer = null;
-        }
+        customers = entityManager.createQuery("FROM Customer c WHERE c.email = :email", Customer.class)
+                    .setParameter("email",email).getResultList();
 
-        return customer;
+        return customers;
     }
 
     @Override
-    public Customer findByDrivingLicence(String drivingLicence) {
-        Customer customer;
+    public List<Customer> findByDrivingLicence(String drivingLicence) {
+        List <Customer> customers;
 
-        try {
-            customer = (Customer) entityManager
-                    .createQuery("FROM Customer c WHERE c.drivingLicenceNumber = :drivingLicence")
-                    .setParameter("drivingLicence",drivingLicence).getSingleResult();
-        } catch (NoResultException e) {
-            customer = null;
-        }
+        customers = entityManager
+                    .createQuery("FROM Customer c WHERE c.drivingLicenceNumber = :drivingLicence",Customer.class)
+                    .setParameter("drivingLicence",drivingLicence).getResultList();
 
-        return customer;
+        return customers;
     }
 
     @Override
     public List<Customer> findByLastName(String lastName) {
         List<Customer> customers;
+
         customers = entityManager
                     .createQuery("FROM Customer c WHERE c.lastName = :lastName", Customer.class)
                     .setParameter("lastName",lastName).getResultList();
-        if(customers.isEmpty()) {
-            customers = null;
-        }
 
         return customers;
     }

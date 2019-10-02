@@ -144,23 +144,26 @@ public class Customer {
     }
 
     public void addTransaction(Transaction transaction) {
-        if(transactions == null) {
+        if(transactions.isEmpty()) {
             transactions = new ArrayList<>();
         }
+
         if(transactions.contains(transaction)) {
             return;
         }
+
         transactions.add(transaction);
         transaction.setCustomer(this);
     }
 
+
+
     public void removeTransaction(Transaction transaction) {
-        //prevent endless loop
         if (!transactions.contains(transaction))
-            return ;
-        //remove the account
+            return;
+
         transactions.remove(transaction);
-        //remove myself from the twitter account
+
         transaction.setCustomer(null);
     }
 }

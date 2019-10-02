@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Validator;
 import java.util.List;
 
 @Service
@@ -44,22 +43,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer isEmailInUse(String email) {
-        Customer customer = customerRepository.findByEmail(email);
-        if(customer == null) {
-            return null;
-        }
-        return customer;
+    public List<Customer> isEmailInUse(String email) {
+        return customerRepository.findByEmail(email);
     }
 
     @Override
     @Transactional
-    public Customer isDrivingLicenceInUse(String drivingLicence) {
-        Customer customer = customerRepository.findByDrivingLicence(drivingLicence);
-        if(customer == null) {
-            return null;
-        }
-        return customer;
+    public List<Customer> isDrivingLicenceInUse(String drivingLicence) {
+        return customerRepository.findByDrivingLicence(drivingLicence);
     }
 
     @Override

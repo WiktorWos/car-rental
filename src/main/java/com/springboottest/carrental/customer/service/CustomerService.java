@@ -9,7 +9,7 @@ public interface CustomerService {
     void save(Customer customer);
     Customer getById(Long id);
     void deleteById(Long id);
-    Customer isEmailInUse(String email);
-    Customer isDrivingLicenceInUse(String drivingLicence);
+    List<Customer> isEmailInUse(String email);
+    List<Customer> isDrivingLicenceInUse(String drivingLicence);
     List<Customer> searchCustomerByName(String text);
 }
