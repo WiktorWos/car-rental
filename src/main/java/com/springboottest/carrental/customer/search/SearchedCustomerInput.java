@@ -1,5 +1,6 @@
 package com.springboottest.carrental.customer.search;
 
+import com.springboottest.carrental.validation.SearchedCustomerNotFound;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotNull;
 @Component
 public class SearchedCustomerInput {
     @NotNull
+    @SearchedCustomerNotFound
     private String searchByLastNameOrDrivingLicence;
 
     public SearchedCustomerInput() {

@@ -17,15 +17,7 @@
 
     <div class="content">
         <div class="container">
-            <h3>Search customer by last name or driving licence number: </h3>
-            <form action="#" th:action="@{/customer/search}" th:object="${searchedCustomer}" method="get">
-                <input type="text" th:field="*{searchByLastNameOrDrivingLicence}" name="text"/>
-                <span th:if="${#fields.hasErrors('searchByLastNameOrDrivingLicence')}"
-                      th:errors="*{searchByLastNameOrDrivingLicence}"></span>
-                <button type="submit">Search</button>
-            </form>
 
-            <br/><br/>
             <form action="#" th:action="@{/customer/confirm}" th:object="${customer}" method="post">
                 <h3>Select existing customer:</h3>
                 <select th:field="*{id}">
@@ -36,8 +28,10 @@
                 </select>
                 <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
 
-
                 <button type="submit">Save</button>
+                <button type="button" name="search">
+                    <a th:href="@{/customer/searchInput}">Search</a>
+                </button>
             </form>
         </div>
     </div>

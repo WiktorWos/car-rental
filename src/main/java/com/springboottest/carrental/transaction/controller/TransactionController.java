@@ -1,5 +1,6 @@
 package com.springboottest.carrental.transaction.controller;
 
+import com.springboottest.carrental.car.entity.Car;
 import com.springboottest.carrental.car.service.CarService;
 import com.springboottest.carrental.customer.entity.Customer;
 import com.springboottest.carrental.customer.jackson.CustomerJsonToPojo;
@@ -66,63 +67,143 @@ public class TransactionController {
             return "transaction-form";
         }
 
-        //update
-        if (transaction.getId() != null) {
-            Long carId = transaction.getCar().getId();
-            transaction = transactionService.getById(transaction.getId());
-            transaction.setCar(carService.getById(carId));
-            System.out.println(transaction);
-        }
+        Transaction transactionWithCar = getTransactionWithCar(transaction);
+        Transaction newOrUpdatedTransaction = getTransactionIfIsOnUpdate(transactionWithCar);
+        Transaction transactionWithSetProperties = getTransactionWithSetProperties(newOrUpdatedTransaction);
+        Transaction transactionReadyToSave = getTransactionWithCustomer(transactionWithSetProperties);
 
-        transaction.setCar(carService.getById(transaction.getCar().getId()));
-        transaction.setStartDate(LocalDateTime.now());
-        transaction.setStartMileage(transaction.getCar().getCarMileage());
-
-        transaction.getCar().setActive(true);
-
-        if(transaction.getCustomer() == null) {
-            Customer customer = customerJsonToPojo.convertToPojo();
-
-            //transaction with existing customer
-            if(customer.getId() != null) {
-                customer = customerService.getById(customer.getId());
-            }
-
-            customer.addTransaction(transaction);
-            transaction.setPrice(priceBase.getPriceBase(transaction.getCustomer().getExperience()));
-        }
-
-
-        transactionService.save(transaction);
+        transactionService.save(transactionReadyToSave);
         return "redirect:/transaction/findAll";
+    }
+
+    private Transaction getTransactionWithCar(Transaction transaction) {
+        Long newCarId = getNewCarId(transaction);
+        Car newCar = getNewCar(newCarId);
+        transaction.setCar(newCar);
+        return transaction;
+    }
+
+    private Transaction getTransactionIfIsOnUpdate(Transaction transaction) {
+        if(isTransactionOnUpdate(transaction)) {
+            Transaction updatedTransaction = getUpdatedTransaction(transaction);
+            return updatedTransaction;
+        }
+        return transaction;
+    }
+
+    private boolean isTransactionOnUpdate(Transaction transaction) {
+        return transaction.getId() != null;
+    }
+
+    private Long getNewCarId(Transaction transaction) {
+        return transaction.getCar().getId();
+    }
+
+    private Transaction getUpdatedTransaction(Transaction transaction) {
+        Long transactionId = transaction.getId();
+        transaction = transactionService.getById(transactionId);
+        return transaction;
+    }
+
+    private Car getNewCar(Long carId) {
+        Car newCar = carService.getById(carId);
+        return newCar;
+    }
+
+    private Transaction getTransactionWithSetProperties(Transaction transaction) {
+        transaction.setStartDate(LocalDateTime.now());
+        int mileageOfCarAssociatedWithTransaction = transaction.getCar().getCarMileage();
+        transaction.setStartMileage(mileageOfCarAssociatedWithTransaction);
+        Car carAssociatedWithTransaction = transaction.getCar();
+        carAssociatedWithTransaction.setActive(true);
+        return transaction;
+    }
+
+    private Transaction getTransactionWithCustomer(Transaction transaction) {
+        if(isTransactionNew(transaction)) {
+            Customer customer = getCustomerAssociatedWithTransaction();
+            Customer existingOrNewCustomer = getCustomerIfExist(customer);
+            transaction.setCustomer(existingOrNewCustomer);
+            double priceBase = getPriceBase(transaction);
+            transaction.setPrice(priceBase);
+        }
+        return transaction;
+    }
+
+    private boolean isTransactionNew(Transaction transaction) {
+        return transaction.getCustomer() == null;
+    }
+
+    private Customer getCustomerAssociatedWithTransaction() {
+        return customerJsonToPojo.convertToPojo();
+    }
+
+    private Customer getCustomerIfExist(Customer customer) {
+        if(doesCustomerExist(customer)) {
+            Long existingCustomerId = customer.getId();
+            Customer existingCustomer = customerService.getById(existingCustomerId);
+            return existingCustomer;
+        }
+        return customer;
+    }
+
+    private boolean doesCustomerExist(Customer customer) {
+        return customer.getId() != null;
+    }
+
+    private double getPriceBase(Transaction transaction) {
+        Customer customerAssociatedWithTransaction = transaction.getCustomer();
+        int customerExperience = customerAssociatedWithTransaction.getExperience();
+        double transactionPriceBase = priceBase.getPriceBase(customerExperience);
+        return transactionPriceBase;
     }
 
     @GetMapping("/update")
     public String updateTransaction(@RequestParam Long id, Model model) {
-        Transaction transaction = transactionService.getById(id);
-        transaction.getCar().setActive(false);
+        Transaction updatedTransaction = transactionService.getById(id);
+        Car carAssociatedWithTransaction = updatedTransaction.getCar();
+        carAssociatedWithTransaction.setActive(false);
         model.addAttribute("availableCars", carService.findAvailableCars());
-        model.addAttribute("transaction", transaction);
+        model.addAttribute("transaction", updatedTransaction);
         return "transaction-form";
     }
 
 
     @GetMapping("/delete")
     public String deleteTransaction(@RequestParam Long id) {
-        Transaction transaction = transactionService.getById(id);
-        transaction.getCar().setActive(false);
+        Transaction deletedTransaction = transactionService.getById(id);
+        Car carAssociatedWithTransaction = deletedTransaction.getCar();
+        carAssociatedWithTransaction.setActive(false);
 
-
-        if(transaction.getCustomer().getTransactions().size() == 1) {
-            Long customerId = transaction.getCustomer().getId();
-            transaction.getCustomer().removeTransaction(transaction);
-            customerService.deleteById(customerId);
-            transactionService.deleteById(id);
+        if(doesCustomerHaveOnlyThisTransaction(deletedTransaction)) {
+            deleteTransactionWithCustomer(deletedTransaction);
             return "redirect:/transaction/findAll";
         }
 
-        transaction.getCustomer().removeTransaction(transaction);
-        transactionService.deleteById(id);
+        deleteOnlyTransaction(deletedTransaction);
         return "redirect:/transaction/findAll";
+    }
+
+    private boolean doesCustomerHaveOnlyThisTransaction(Transaction transaction) {
+        Customer customer = transaction.getCustomer();
+        List<Transaction> customersTransaction = customer.getTransactions();
+        int onlyOneTransaction = 1;
+        return customersTransaction.size() == onlyOneTransaction;
+    }
+
+    private void deleteTransactionWithCustomer(Transaction transaction) {
+        Customer customerAssociatedWithTransaction = transaction.getCustomer();
+        Long customerId = customerAssociatedWithTransaction.getId();
+        customerAssociatedWithTransaction.removeTransaction(transaction);
+        customerService.deleteById(customerId);
+        Long transactionId = transaction.getId();
+        transactionService.deleteById(transactionId);
+    }
+
+    private void deleteOnlyTransaction(Transaction transaction) {
+        Customer customerAssociatedWithTransaction = transaction.getCustomer();
+        customerAssociatedWithTransaction.removeTransaction(transaction);
+        Long transactionId = transaction.getId();
+        transactionService.deleteById(transactionId);
     }
 }

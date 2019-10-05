@@ -23,14 +23,14 @@ public class UniqueDrivingLicenceValidator implements ConstraintValidator<Unique
         if(isCustomerOnUpdate(customers)){
             return true;
         }
-        return isDrivingLicenceInUse(customers);
+        return isDrivingLicenceNotUsed(customers);
     }
 
     private boolean isCustomerOnUpdate(List<Customer> customers) {
         return !customers.isEmpty() && customers.get(0).getOnUpdate();
     }
 
-    private boolean isDrivingLicenceInUse(List<Customer> customers) {
+    private boolean isDrivingLicenceNotUsed(List<Customer> customers) {
         return customers.isEmpty();
     }
 }

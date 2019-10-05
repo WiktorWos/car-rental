@@ -117,24 +117,27 @@ public class CustomerController {
     public String selectCustomer(Model model) {
         model.addAttribute("customers", customerService.findAll());
         model.addAttribute("customer", new Customer());
-        model.addAttribute("searchedCustomer", new SearchedCustomerInput());
         return "customer-select";
     }
 
     @GetMapping("/search")
-    public String searchCustomer(@Valid @ModelAttribute SearchedCustomerInput searchedCustomerInput, Model model) {
+    public String searchCustomer(@ModelAttribute @Valid SearchedCustomerInput searchedCustomerInput, BindingResult bindingResult,
+                                 Model model) {
+        if(bindingResult.hasErrors()) {
+            return "customer-search";
+        }
+
         String searchInput = searchedCustomerInput.getSearchByLastNameOrDrivingLicence();
         List <Customer> customersFoundByDrivingLicence = customerService.isDrivingLicenceInUse(searchInput);
-        int foundCustomerIndex = 0;
 
         if(isCustomerFound(customersFoundByDrivingLicence)) {
-            model.addAttribute("customers", customersFoundByDrivingLicence.get(foundCustomerIndex));
+            model.addAttribute("customers", customersFoundByDrivingLicence);
             return "customer-list";
         }
 
         List <Customer> customersFoundByLastName = customerService.searchCustomerByName(searchInput);
         if(isCustomerFound(customersFoundByLastName)){
-            model.addAttribute("customers", customersFoundByLastName.get(foundCustomerIndex));
+            model.addAttribute("customers", customersFoundByLastName);
             return "customer-list";
         }
 
@@ -143,6 +146,12 @@ public class CustomerController {
 
     private boolean isCustomerFound(List<Customer> customers) {
         return !customers.isEmpty();
+    }
+
+    @GetMapping("/searchInput")
+    public String searchInput(Model model) {
+        model.addAttribute("searchedCustomerInput", new SearchedCustomerInput());
+        return "customer-search";
     }
 
 

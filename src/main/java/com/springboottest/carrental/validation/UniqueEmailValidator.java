@@ -24,14 +24,14 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
         if(isCustomerOnUpdate(customers)){
             return true;
         }
-        return isEmailInUse(customers);
+        return isEmailNotUsed(customers);
     }
 
     private boolean isCustomerOnUpdate(List<Customer> customers) {
         return !customers.isEmpty() && customers.get(0).getOnUpdate();
     }
 
-    private boolean isEmailInUse(List<Customer> customers) {
+    private boolean isEmailNotUsed(List<Customer> customers) {
         return customers.isEmpty();
     }
 }

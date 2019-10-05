@@ -48,12 +48,11 @@ public class CarController {
     @PostMapping("/save")
     public String saveCar(@Valid @ModelAttribute Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
-            System.out.println(bindingResult.getAllErrors());
             return "car-form";
-        } else {
-            carService.save(car);
-            return "redirect:/cars/findAll";
         }
+
+        carService.save(car);
+        return "redirect:/cars/findAll";
     }
 
     @GetMapping("/delete")

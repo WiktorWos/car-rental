@@ -5,8 +5,7 @@ import com.springboottest.carrental.transaction.entity.Transaction;
 import com.springboottest.carrental.validation.ExtendedEmailValidator;
 import com.springboottest.carrental.validation.UniqueDrivingLicence;
 import com.springboottest.carrental.validation.UniqueEmail;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Indexed
 @Table(name = "customers")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "transactions"})
 public class Customer {
@@ -26,13 +24,11 @@ public class Customer {
     @NotNull(message = "Please enter first name")
     @Size(min = 3, max = 20, message = "Min name size is 3, max is 20")
     @Column(name = "first_name")
-    @Field
     private String firstName;
 
     @NotNull(message = "Please enter last name")
     @Size(min = 3, max = 20, message = "Min name size is 3, max is 20")
     @Column(name = "last_name")
-    @Field
     private String lastName;
 
     @Min(value = 1, message = "Experience must be greater or equal to 1 year")
@@ -144,7 +140,7 @@ public class Customer {
     }
 
     public void addTransaction(Transaction transaction) {
-        if(transactions.isEmpty()) {
+        if(transactions == null) {
             transactions = new ArrayList<>();
         }
 

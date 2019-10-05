@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/form.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+    <div class="sidenav">
+        <a th:href="@{/cars/findAll}">Select customer</a>
+    </div>
+
+    <div class="header">
+        <h3>Search customer</h3>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <h3>Search customer by last name or driving licence number: </h3>
+            <form action="#" th:action="@{/customer/search}" th:object="${searchedCustomerInput}" method="get">
+                <input type="text" th:field="*{searchByLastNameOrDrivingLicence}" />
+                <span th:if="${#fields.hasErrors('searchByLastNameOrDrivingLicence')}"
+                      th:errors="*{searchByLastNameOrDrivingLicence}"></span>
+                <div>
+                    <button type="submit">Search</button>
+                    <button type="button" name="cancel">
+                        <a th:href="@{/customer/select}">Cancel</a>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
