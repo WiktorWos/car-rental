@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.springboottest.carrental.car.entity.Car;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -105,6 +106,8 @@ public class Transaction {
     private boolean sameAsFormer(Customer newCustomer) {
         return customer==null? newCustomer == null : customer.equals(newCustomer);
     }
+
+
 
     @Override
     public String toString() {

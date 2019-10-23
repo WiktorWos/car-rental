@@ -23,7 +23,11 @@
                         <th>Car name</th>
                         <th>Car mileage</th>
                         <th>Car production date</th>
-                        <th>Active</th>
+                        <th>Active
+                            <button type="button" name="cancel">
+                                <a th:href="@{/car/findActive}">Cancel</a>
+                            </button>
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
